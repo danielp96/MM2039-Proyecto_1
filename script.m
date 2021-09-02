@@ -1,8 +1,19 @@
 
-test_plot('datos.csv');
+%test_plot('./data.csv');
 
-figure(5);
-data_plot('datos.csv', 102, 5/23, 130, 255, 'Polos Complejos Cerca de I');
+[t, data1, data2] = filter_data('./data.csv', 102, 5/23, 130, 255);
+
+data1 = data1 -5;
+data2 = data2 -5;
+
+figure(3);
+plot(t, data1);
+hold on
+
+plot(t, data2);
+plot(t, abs(data2), '-x');
+
+
 
 
 function test_plot(file)
@@ -13,21 +24,15 @@ function test_plot(file)
     plot(data.CH2);
 end
 
-function data_plot(file, offset, scale, start_x, end_x, title_text)
-    data = readtable(file);
+function [t, data1, data2] = filter_data(file, offset, scale, start_x, end_x)
+    data_temp = readtable(file);
     
-    t = 0:0.004:(size(data.CH1, 1)-1)*0.004;
+    t = 0:0.004:(size(data_temp.CH1, 1)-1)*0.004;
     t = t';
     
     t = t(1:(end_x - start_x + 1));
     
-    plot(t, (data.CH1(start_x:end_x) - offset)*scale);
-    hold on
-    scatter(t, (data.CH2(start_x:end_x) - offset)*scale);
-    grid on
-    
-    xlabel('Tiempo (s)');
-    ylabel('Amplitud (V)');
-    title(title_text);
+    data1 = (data_temp.CH1(start_x:end_x) - offset)*scale;
+    data2 = (data_temp.CH2(start_x:end_x) - offset)*scale;
 
 end
