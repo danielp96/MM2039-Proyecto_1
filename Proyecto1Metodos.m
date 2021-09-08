@@ -66,7 +66,7 @@ hold off
 %% Obteniendo frecuencia
 %T_reg = 2*((max(Xmax)-min(Xmax))/(size(Xmax,2)-1));
 T_reg = Xmax(5)-Xmax(3);
-f_reg = 1/T_reg
+f_reg = 1/T_reg;
 %f_reg = 31;
 
 %% Linealizando el exponencial
@@ -91,15 +91,28 @@ Sr = sum((y-y_reg).^2);
 
 St = var(y)*size(y,2);
 
-R2 = 1-Sr/St;
+R_2 = 1-Sr/St;
 
 %% Graficando original y regresion
 figure(3)
 plot(x,y,'-o');
 hold on
 plot(x,y_reg,'-x');
-%% Tomando puntos maximos
+%% Calculos de componentes en circuito Salem-Key
+u = 10^-6;
+n = 10^-9
+C1 = 10*u;
+C2 = 24*n;
+Z = k_reg/sqrt(k_reg^2+(2*pi*f_reg)^2);
+Wn = -k_reg/Z;
+syms R1s R2s;
+S = solve([(R1s+R2s)/(R1s*R2s*C1)==2*Z*Wn, Wn^2==1/(R1s*R2s*C1*C2)],[R1s, R2s])
+close all
+G = tf([Wn^2],[1 2*Wn*Z Wn^2])
 
+step(G)
+R1 = double(S.R1s(2));
+R2 = double(S.R1s(1));
 
 %% Funciones
 
