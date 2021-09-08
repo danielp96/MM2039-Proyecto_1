@@ -9,7 +9,7 @@
 %  Daniel Barrientos 18714
 
 close all
-%% Extrayendo Datos del Excel
+%% Extrayendo Datos del CSV
 test = 0;
 if (test)
     A = 4;
