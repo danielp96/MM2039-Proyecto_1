@@ -29,8 +29,8 @@ data2 = data2 -5;
 x = t';
 y = data2';
 
-x = x(1:60);
-y = y(1:60);
+x = x(1:55);
+y = y(1:55);
 
 %% Separando datos maximos
 y_ant = 0;
@@ -64,7 +64,8 @@ plot(t, abs(data2));
 hold off
 
 %% Obteniendo frecuencia
-T_reg = 2*((max(Xmax)-min(Xmax))/(size(Xmax,2)-1));
+%T_reg = 2*((max(Xmax)-min(Xmax))/(size(Xmax,2)-1));
+T_reg = Xmax(5)-Xmax(3);
 f_reg = 1/T_reg
 %f_reg = 31;
 
@@ -83,6 +84,14 @@ A_reg = exp(Sol(1));
 k_reg = Sol(2);
 
 y_reg = A_reg*exp(k_reg*x).*(-cos(2*pi*f_reg*x));
+
+%% R²
+
+Sr = sum((y-y_reg).^2);
+
+St = var(y)*size(y,2);
+
+R2 = 1-Sr/St;
 
 %% Graficando original y regresion
 figure(3)
