@@ -29,6 +29,9 @@ data2 = data2 -5;
 x = t';
 y = data2';
 
+x = x(1:60);
+y = y(1:60);
+
 %% Separando datos maximos
 y_ant = 0;
 Ymax = [];
@@ -63,26 +66,29 @@ hold off
 %% Obteniendo frecuencia
 T_reg = 2*((max(Xmax)-min(Xmax))/(size(Xmax,2)-1));
 f_reg = 1/T_reg
+%f_reg = 31;
 
 %% Linealizando el exponencial
 Ymax = abs(Ymax);
+
+Ymax(Ymax==0) = 0.2174; %fixes log(0) issue
+
 Ylineal = log(Ymax);
 MA = [size(Xmax,2) sum(Xmax); sum(Xmax) sum(Xmax.^2)];
 MB = [sum(Ylineal);sum(Ylineal.*Xmax)];
 
-Sol = inv(MA)*MB;
+Sol = MA\MB;
 
 A_reg = exp(Sol(1));
 k_reg = Sol(2);
 
-y_reg = A_reg*exp(k_reg*x).*sin(2*pi*f_reg*x);
+y_reg = A_reg*exp(k_reg*x).*(-cos(2*pi*f_reg*x));
 
 %% Graficando original y regresion
 figure(3)
-plot(x,y,'r')
+plot(x,y,'-o');
 hold on
-plot(x,y_reg,'b')
-hold off
+plot(x,y_reg,'-x');
 %% Tomando puntos maximos
 
 
